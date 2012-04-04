@@ -4,6 +4,7 @@
 
 #include <QAbstractListModel>
 #include <QVariantMap>
+#include <QStringList>
 
 
 class QuickModel : public QAbstractListModel
@@ -11,7 +12,7 @@ class QuickModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit QuickModel(QObject *parent = 0);
-    QuickModel(const QList<QVariantMap> &items, QObject *parent = 0);
+    //QuickModel(const QList<QVariantMap> &items, QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
@@ -23,12 +24,20 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-    QList<QVariantMap> itemList() const;
-    void setItemList(const QList<QVariantMap> &items);
+    QList<QVariantList> itemList() const;
+    void setItemList(const QList<QVariantList> &items);
+
+    void setKeys(const QStringList &keys);
+    void insert(int pos, const QVariantMap& item);
+    void append(const QVariantMap& item);
+
+private:
+    int roleForKey(const QByteArray& key);
 
 private:
     Q_DISABLE_COPY(QuickModel)
-    QList<QVariantMap> lst;
+    QList<QVariantList> lst;
+    QHash<int, QByteArray> roleNames;
 };
 
 

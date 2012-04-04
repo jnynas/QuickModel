@@ -9,10 +9,13 @@ QuickModel::QuickModel(QObject *parent)
 
 
 
-QuickModel::QuickModel(const QList<QVariantMap> &items, QObject *parent )
+/*QuickModel::QuickModel(const QList<QVariantList> &items, QObject *parent )
     : QAbstractListModel(parent), lst(items)
 {
-}
+}*/
+
+
+
 
 
 
@@ -52,8 +55,8 @@ Qt::ItemFlags QuickModel::flags(const QModelIndex &index) const
 bool QuickModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.row() >= 0 && index.row() < lst.size()
-        && (role == Qt::EditRole || role == Qt::DisplayRole)) {
-        lst.replace(index.row(), value.toMap());
+            && (role == Qt::EditRole || role == Qt::DisplayRole)) {
+        lst.replace(index.row(), value.toList());
         emit dataChanged(index, index);
         return true;
     }
@@ -69,7 +72,7 @@ bool QuickModel::insertRows(int row, int count, const QModelIndex &parent)
     beginInsertRows(QModelIndex(), row, row + count - 1);
 
     for (int r = 0; r < count; ++r)
-        lst.insert(row, QVariantMap());
+        lst.insert(row, QVariantList());
 
     endInsertRows();
 
@@ -94,15 +97,56 @@ bool QuickModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 
-void QuickModel::setItemList(const QList<QVariantMap> &items)
+void QuickModel::setItemList(const QList<QVariantList> &items)
 {
     emit beginResetModel();
     lst = items;
     emit endResetModel();
 }
 
-QList<QVariantMap> QuickModel::itemList() const
+QList<QVariantList> QuickModel::itemList() const
 {
     return lst;
 }
 
+void QuickModel::setKeys(const QStringList &keys)
+{
+    roleNames.clear();
+
+    QString role;
+    int i = Qt::UserRole + 1;
+    foreach(role, keys)
+    {
+        roleNames[i] = role.toAscii();
+        ++ i;
+    }
+    setRoleNames(roleNames);
+}
+
+
+
+void QuickModel::insert(int pos, const QVariantMap& item)
+{
+
+}
+
+void QuickModel::append(const QVariantMap& item)
+{
+    QVariantList variantList;
+
+
+}
+
+
+int QuickModel::roleForKey(const QByteArray& key)
+{
+    QHashIterator<int, QByteArray> iter(roleNames);
+    while(iter.hasNext())
+    {
+        iter.next();
+        if(iter.value() == key)
+        {
+            return iter.key();
+        }
+    }
+}
