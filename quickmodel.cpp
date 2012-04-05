@@ -1,6 +1,6 @@
 
 #include "quickmodel.h"
-
+#include <QDebug>
 
 QuickModel::QuickModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -24,7 +24,8 @@ int QuickModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_lst.count();
+    int c = m_lst.count();
+    return c;
 }
 
 
@@ -35,7 +36,9 @@ QVariant QuickModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     const QVariantList& v = m_lst.at(index.row());
-    return v[role];
+    QVariant va = v[role];
+    qDebug() << va;
+    return va;
 
     /*
 
@@ -137,7 +140,7 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 {
     QVariantList variantList;
     variantList = flatten(item);
-    beginInsertRows(QModelIndex(), rowCount(), rowCount()+variantList.count());
+    beginInsertRows(QModelIndex(), rowCount(), rowCount()+1);
     m_lst.insert(pos, variantList);
     endInsertRows();
 }
