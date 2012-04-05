@@ -117,41 +117,40 @@ QList<QVariantList> QuickModel::itemList() const
 
 void QuickModel::setKeys(const QStringList &keys)
 {
-    roleNames.clear();
+    m_roleNames.clear();
 
     QString role;
     //int i = Qt::UserRole + 1;
     int i=0;
     foreach(role, keys)
     {        
-        roleNames[i] = role.toAscii();
+        m_roleNames[i] = role.toAscii();
         m_rolesForKeys[role] = i;
         ++i;
     }
-    setRoleNames(roleNames);
+    setRoleNames(m_roleNames);
 }
 
 
 
 void QuickModel::insert(int pos, const QVariantMap& item)
 {
-
+    QVariantList variantList;
+    variantList = flatten(item);
+    beginInsertRows(QModelIndex(), rowCount(), rowCount()+variantList.count());
+    m_lst.insert(pos, variantList);
+    endInsertRows();
 }
 
 void QuickModel::append(const QVariantMap& item)
 {
-    // begininsert etc
-
-    QVariantList variantList;
-    variantList = flatten(item);
-    m_lst.append(variantList);
-
+    insert(m_lst.size(), item);
 }
 
 
-int QuickModel::roleForKey(const QByteArray& key)
+/*int QuickModel::roleForKey(const QByteArray& key)
 {
-    QHashIterator<int, QByteArray> iter(roleNames);
+    QHashIterator<int, QByteArray> iter(m_roleNames);
     while(iter.hasNext())
     {
         iter.next();
@@ -160,7 +159,9 @@ int QuickModel::roleForKey(const QByteArray& key)
             return iter.key();
         }
     }
-}
+    qCritical("shite");
+    return -1;
+}*/
 
 QVariantList QuickModel::flatten(const QVariantMap &map)
 {
@@ -181,5 +182,5 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
         res[ndx] = v;
         //cout << i.key() << ": " << i.value() << endl;
     }
-
+    return res;
 }

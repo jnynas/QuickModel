@@ -32,13 +32,13 @@ public:
     void append(const QVariantMap& item);
 
 private:
-    int roleForKey(const QByteArray& key);
+    //int roleForKey(const QByteArray& key);
     QVariantList flatten(const QVariantMap& map);
 
 private:
     Q_DISABLE_COPY(QuickModel)
     QList<QVariantList> m_lst;
-    QHash<int, QByteArray> roleNames;
+    QHash<int, QByteArray> m_roleNames;
     QHash<QString, int> m_rolesForKeys;
 };
 
