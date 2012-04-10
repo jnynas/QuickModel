@@ -140,7 +140,7 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 {
     QVariantList variantList;
     variantList = flatten(item);
-    beginInsertRows(QModelIndex(), rowCount(), rowCount()+1);
+    beginInsertRows(QModelIndex(), pos, pos);
     m_lst.insert(pos, variantList);
     endInsertRows();
 }
@@ -151,20 +151,7 @@ void QuickModel::append(const QVariantMap& item)
 }
 
 
-/*int QuickModel::roleForKey(const QByteArray& key)
-{
-    QHashIterator<int, QByteArray> iter(m_roleNames);
-    while(iter.hasNext())
-    {
-        iter.next();
-        if(iter.value() == key)
-        {
-            return iter.key();
-        }
-    }
-    qCritical("shite");
-    return -1;
-}*/
+
 
 QVariantList QuickModel::flatten(const QVariantMap &map)
 {
