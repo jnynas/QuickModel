@@ -138,10 +138,10 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 void QuickModel::setItem(int pos, const QVariantMap &item)
 {
     QVariantList variantList;
-    variantList = flatten(item);
-    beginInsertRows(QModelIndex(), pos, pos);
+    variantList = flatten(item);    
     m_lst.replace(pos, variantList);
-    endInsertRows();
+    QModelIndex idx = createIndex(pos,0);
+    emit dataChanged(idx, idx);
 }
 
 void QuickModel::append(const QVariantMap& item)
