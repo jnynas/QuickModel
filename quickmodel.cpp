@@ -39,12 +39,12 @@ int QuickModel::rowCount(const QModelIndex &parent) const
 QVariant QuickModel::data(const QModelIndex &index, int role) const
 {    
     if (index.row() < 0 || index.row() >= m_lst.size())
-           return QVariant();
+        return QVariant();
 
-   const QVariantList& v = m_lst.at(index.row());
-   QVariant va = v[role];
-   qDebug() << va;
-   return va;
+    const QVariantList& v = m_lst.at(index.row());
+    QVariant va = v[role];
+    qDebug() << va;
+    return va;
 }
 
 
@@ -138,7 +138,7 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 void QuickModel::setItem(int pos, const QVariantMap &item)
 {
     QVariantList variantList;
-    variantList = flatten(item);    
+    variantList = flatten(item);
     m_lst.replace(pos, variantList);
     QModelIndex idx = createIndex(pos,0);
     emit dataChanged(idx, idx);
@@ -180,11 +180,36 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
 
 void QuickModel::testInsert()
 {
-    QVariantMap tstData;
+    for(int i = 0 ; i < rowCount(); ++ i)
+    {
+        QVariantMap tstData = get(i);
+        qDebug() << tstData;
 
-    tstData.insert( "key1", QVariant("firstInsert"));
+    }
+
+    /*tstData.insert( "key1", QVariant("firstInsert"));
     tstData.insert( "key2", QVariant("secondInsert"));
 
-    insert(0, tstData);
+    insert(0, tstData);*/
+
+
+}
+
+QVariantMap QuickModel::get(int pos)
+{
+    QVariantList resLst = m_lst.at(pos);
+
+    QVariantMap res;
+
+    int ndx = 0;
+    QHashIterator<QString, int> i(m_rolesForKeys);
+    while(i.hasNext())
+    {
+        i.next();
+        res[i.key()] = resLst.at(ndx);
+        ndx ++;
+    }
+    return res;
+
 
 }

@@ -42,7 +42,7 @@ Rectangle {
         delegate:  myDelegate
     }
 
-    /*Rectangle {
+    Rectangle {
         id: button1
         color: "red"
         width: 96; height: 24; anchors.centerIn: parent
@@ -50,9 +50,9 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: quickmdl.testInsert()
-        }*/
+        }
 
-    Rectangle {
+ /*   Rectangle {
         id: button2
         color: "blue"
         width: 96; height: 24; anchors.centerIn: parent
@@ -60,7 +60,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: testReplace()
-        }
+        }*/
     }
 }
 
