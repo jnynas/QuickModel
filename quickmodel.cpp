@@ -101,7 +101,7 @@ void QuickModel::setItemList(const QList<QVariantList> &items)
     emit endResetModel();
 }
 
-QList<QVariantList> QuickModel::itemList() const
+const QList<QVariantList>& QuickModel::items() const
 {
     return m_lst;
 }
@@ -135,7 +135,7 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 
 }
 
-void QuickModel::setItem(int pos, const QVariantMap &item)
+void QuickModel::set(int pos, const QVariantMap &item)
 {
     QVariantList variantList;
     variantList = flatten(item);
@@ -186,7 +186,8 @@ void QuickModel::testInsert()
         qDebug() << tstData;
 
     }
-
+    QString key = "key2";
+    setProperty(1, key, QVariant("setattu"));
     /*tstData.insert( "key1", QVariant("firstInsert"));
     tstData.insert( "key2", QVariant("secondInsert"));
 
@@ -212,4 +213,35 @@ QVariantMap QuickModel::get(int pos)
     return res;
 
 
+}
+
+int QuickModel::count()
+{
+    return rowCount();
+}
+
+void QuickModel::clear()
+{
+    emit beginResetModel();
+    m_lst.clear();
+    emit endResetModel();
+}
+
+void QuickModel::setProperty(int pos, QString& property, QVariant value)
+{
+    QVariantList resLst = m_lst.at(pos);
+
+    int ndx = 0;
+    QByteArray roleName = property.toAscii();
+    QHashIterator<int, QByteArray> i(m_roleNames);
+    while(i.findNext(roleName))
+    {
+        ndx = i.key();
+    }
+
+    resLst[ndx] = value;
+
+    m_lst.replace(pos, resLst);
+    QModelIndex idx = createIndex(pos,0);
+    emit dataChanged(idx, idx);
 }

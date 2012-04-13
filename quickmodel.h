@@ -15,13 +15,11 @@ public:
     //QuickModel(const QList<QVariantMap> &items, QObject *parent = 0);
 
 
-    QList<QVariantList> itemList() const;
+    const QList<QVariantList>& items() const;
     void setItemList(const QList<QVariantList> &items);
-
     void setFields(const QStringList &keys);
-    void insert(int pos, const QVariantMap& item);
-    Q_INVOKABLE void setItem(int pos, const QVariantMap& item);
-    void append(const QVariantMap& item);
+
+
     // useful with QVariantList
     int fieldIndex(const QString& fieldname);
     //void sortBy(const QString& field);
@@ -30,13 +28,16 @@ public:
     // needed since we have items() anyway?
     QList<QVariantList> findItems (const QString& text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const;
 
+    Q_INVOKABLE void append(const QVariantMap& item);
+    Q_INVOKABLE void insert(int pos, const QVariantMap& item);
+    Q_INVOKABLE void set(int pos, const QVariantMap& item);
+    Q_INVOKABLE QVariantMap get(int pos);
+    Q_INVOKABLE int count();
+    Q_INVOKABLE void clear();
+    Q_INVOKABLE void setProperty(int pos, QString& property, QVariant value);
 
-    QVariantMap get(int pos);
+    // for testing
 
-    void clear();
-
-    // xxx dupe
-    const QList<QVariantList>& items() const;
 
     Q_INVOKABLE void testInsert();
 
