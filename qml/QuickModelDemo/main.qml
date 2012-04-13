@@ -21,29 +21,31 @@ Rectangle {
 
         var i=0;
         quickmdl.setFields(keys);
-        for (i=0;i<=100;i++)
+        for (i=0;i<=10;i++)
         {
 
-        var a = randomString();
+            var a = randomString();
             var b = randomString();
 
-        var obj1 = {};
+            var obj1 = {};
             obj1['name'] = a;
             obj1['occupation'] = b;
             obj1['salary'] = Math.floor(Math.random() * 10000);
-        quickmdl.append(obj1)
+            quickmdl.append(obj1)
         }
     }
 
     function testReplace()
     {
         var obj = {};
-        obj['key1'] = "replaced1";
-        obj['key2'] = "replaced2";
+        obj['name'] = "replace";
+        obj['occupation'] = "occu";
+        obj['salary'] = 1000;
 
         quickmdl.set(0, obj);
 
     }
+
 
     Component
     {
@@ -76,13 +78,49 @@ Rectangle {
     Rectangle {
         id: button1
         color: "red"
-        width: 96; height: 24; anchors.centerIn: parent
-        Text { text: "insert" }
+        width: 50; height: 24; anchors.right: parent.right
+        Text { text: "replace first" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: testReplace()
+        }
+    }
+
+
+
+    Rectangle {
+        id: button2
+        color: "blue"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button1.bottom;
+        Text { text: "clear" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: quickmdl.clear()
+        }
+    }
+
+    Rectangle {
+        id: button3
+        color: "green"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button2.bottom;
+        Text { text: "remove last" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: quickmdl.remove(quickmdl.count()-1)
+        }
+    }
+
+    Rectangle {
+        id: button4
+        color: "purple"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button3.bottom;
+        Text { text: "add 10" }
         MouseArea {
             anchors.fill: parent
             onClicked: buildModel()
         }
-          }
+    }
+
     Component.onCompleted: buildModel();
 
 
