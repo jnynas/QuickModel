@@ -178,24 +178,6 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
     return res;
 }
 
-void QuickModel::testInsert()
-{
-    for(int i = 0 ; i < rowCount(); ++ i)
-    {
-        QVariantMap tstData = get(i);
-        qDebug() << tstData;
-
-    }
-    QString key = "key2";
-    setProperty(1, key, QVariant("setattu"));
-    /*tstData.insert( "key1", QVariant("firstInsert"));
-    tstData.insert( "key2", QVariant("secondInsert"));
-
-    insert(0, tstData);*/
-
-
-}
-
 QVariantMap QuickModel::get(int pos)
 {
     QVariantList resLst = m_lst.at(pos);
@@ -227,6 +209,13 @@ void QuickModel::clear()
     emit endResetModel();
 }
 
+void QuickModel::remove(int pos)
+{
+    beginRemoveRows(QModelIndex(), pos, pos);
+    m_lst.removeAt(pos);
+    endRemoveRows();
+}
+
 void QuickModel::setProperty(int pos, QString& property, QVariant value)
 {
     QVariantList resLst = m_lst.at(pos);
@@ -244,4 +233,24 @@ void QuickModel::setProperty(int pos, QString& property, QVariant value)
     m_lst.replace(pos, resLst);
     QModelIndex idx = createIndex(pos,0);
     emit dataChanged(idx, idx);
+}
+
+void QuickModel::testInsert()
+{
+    for(int i = 0 ; i < rowCount(); ++ i)
+    {
+        QVariantMap tstData = get(i);
+        qDebug() << tstData;
+
+    }
+    QString key = "key2";
+    setProperty(1, key, QVariant("setattu"));
+
+    remove(count()-1);
+    /*tstData.insert( "key1", QVariant("firstInsert"));
+    tstData.insert( "key2", QVariant("secondInsert"));
+
+    insert(0, tstData);*/
+
+
 }
