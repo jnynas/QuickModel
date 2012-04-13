@@ -14,7 +14,6 @@ public:
     explicit QuickModel(QObject *parent = 0);
     //QuickModel(const QList<QVariantMap> &items, QObject *parent = 0);
 
-
     const QList<QVariantList>& items() const;
     void setItemList(const QList<QVariantList> &items);
     void setFields(const QStringList &keys);

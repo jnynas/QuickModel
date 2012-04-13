@@ -122,6 +122,18 @@ void QuickModel::setFields(const QStringList &keys)
     setRoleNames(m_roleNames);
 }
 
+int QuickModel::fieldIndex(const QString &fieldname)
+{
+    int ndx = -1;
+    QByteArray roleName = fieldname.toAscii();
+    QHashIterator<int, QByteArray> i(m_roleNames);
+    while(i.findNext(roleName))
+    {
+        ndx = i.key();
+    }
+    return ndx;
+}
+
 
 
 void QuickModel::insert(int pos, const QVariantMap& item)
@@ -147,9 +159,6 @@ void QuickModel::set(int pos, const QVariantMap &item)
 void QuickModel::append(const QVariantMap& item)
 {
     insert(m_lst.size(), item);
-
-
-
 }
 
 
@@ -220,13 +229,7 @@ void QuickModel::setProperty(int pos, QString& property, QVariant value)
 {
     QVariantList resLst = m_lst.at(pos);
 
-    int ndx = 0;
-    QByteArray roleName = property.toAscii();
-    QHashIterator<int, QByteArray> i(m_roleNames);
-    while(i.findNext(roleName))
-    {
-        ndx = i.key();
-    }
+    int ndx = fieldIndex(property);
 
     resLst[ndx] = value;
 
