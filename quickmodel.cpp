@@ -19,7 +19,7 @@ int QuickModel::rowCount(const QModelIndex &parent) const
 
 
 QVariant QuickModel::data(const QModelIndex &index, int role) const
-{    
+{
     if (index.row() < 0 || index.row() >= m_lst.size())
         return QVariant();
 
@@ -135,8 +135,6 @@ QVariantMap QuickModel::get(int pos)
         ndx ++;
     }
     return res;
-
-
 }
 
 int QuickModel::count()
@@ -171,22 +169,4 @@ void QuickModel::setProperty(int pos, QString& property, QVariant value)
     emit dataChanged(idx, idx);
 }
 
-void QuickModel::testInsert()
-{
-    for(int i = 0 ; i < rowCount(); ++ i)
-    {
-        QVariantMap tstData = get(i);
-        qDebug() << tstData;
 
-    }
-    QString key = "key2";
-    setProperty(1, key, QVariant("setattu"));
-
-    remove(count()-1);
-    /*tstData.insert( "key1", QVariant("firstInsert"));
-    tstData.insert( "key2", QVariant("secondInsert"));
-
-    insert(0, tstData);*/
-
-
-}
