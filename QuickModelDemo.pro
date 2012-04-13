@@ -39,3 +39,5 @@ qtcAddDeployment()
 
 HEADERS += \
     quickmodel.h
+
+

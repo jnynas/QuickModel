@@ -16,7 +16,13 @@ QuickModel::QuickModel(QObject *parent)
 
 
 
+/*Qt::ItemFlags QuickModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return QAbstractItemModel::flags(index) | Qt::ItemIsDropEnabled;
 
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+}*/
 
 
 int QuickModel::rowCount(const QModelIndex &parent) const
@@ -31,40 +37,22 @@ int QuickModel::rowCount(const QModelIndex &parent) const
 
 
 QVariant QuickModel::data(const QModelIndex &index, int role) const
-{
+{    
     if (index.row() < 0 || index.row() >= m_lst.size())
-        return QVariant();
+           return QVariant();
 
-    const QVariantList& v = m_lst.at(index.row());
-    QVariant va = v[role];
-    qDebug() << va;
-    return va;
-
-    /*
-
-    if (role == Qt::DisplayRole || role == Qt::EditRole)
-        return
-
-    return QVariant();
-    */
+   const QVariantList& v = m_lst.at(index.row());
+   QVariant va = v[role];
+   qDebug() << va;
+   return va;
 }
 
 
 
-Qt::ItemFlags QuickModel::flags(const QModelIndex &index) const
+/*bool QuickModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid())
-        return QAbstractItemModel::flags(index) | Qt::ItemIsDropEnabled;
-
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
-}
-
-
-
-bool QuickModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if (index.row() >= 0 && index.row() < m_lst.size()
-            && (role == Qt::EditRole || role == Qt::DisplayRole)) {
+    if (index.row() >= 0 && index.row() < m_lst.size())
+    {
         m_lst.replace(index.row(), value.toList());
         emit dataChanged(index, index);
         return true;
@@ -103,7 +91,7 @@ bool QuickModel::removeRows(int row, int count, const QModelIndex &parent)
     endRemoveRows();
 
     return true;
-}
+}*/
 
 
 void QuickModel::setItemList(const QList<QVariantList> &items)
@@ -118,15 +106,15 @@ QList<QVariantList> QuickModel::itemList() const
     return m_lst;
 }
 
-void QuickModel::setKeys(const QStringList &keys)
+void QuickModel::setFields(const QStringList &keys)
 {
     m_roleNames.clear();
 
     QString role;
-    //int i = Qt::UserRole + 1;
+
     int i=0;
     foreach(role, keys)
-    {        
+    {
         m_roleNames[i] = role.toAscii();
         m_rolesForKeys[role] = i;
         ++i;
@@ -143,11 +131,25 @@ void QuickModel::insert(int pos, const QVariantMap& item)
     beginInsertRows(QModelIndex(), pos, pos);
     m_lst.insert(pos, variantList);
     endInsertRows();
+
+
+}
+
+void QuickModel::setItem(int pos, const QVariantMap &item)
+{
+    QVariantList variantList;
+    variantList = flatten(item);
+    beginInsertRows(QModelIndex(), pos, pos);
+    m_lst.replace(pos, variantList);
+    endInsertRows();
 }
 
 void QuickModel::append(const QVariantMap& item)
 {
     insert(m_lst.size(), item);
+
+
+
 }
 
 
@@ -163,14 +165,26 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
 
     //QVariantMap::Iterator i(map);
     QMapIterator<QString, QVariant> i(map);
-
+    int ndx = 0;
     while (i.hasNext()) {
         i.next();
         QString r = i.key();
         QVariant v = i.value();
-        int ndx = m_rolesForKeys[r];
+        //int ndx = m_rolesForKeys[r];
         res[ndx] = v;
-        //cout << i.key() << ": " << i.value() << endl;
+        ndx++;
+        qDebug() << i.key() << ": " << i.value() << endl;
     }
     return res;
+}
+
+void QuickModel::testInsert()
+{
+    QVariantMap tstData;
+
+    tstData.insert( "key1", QVariant("firstInsert"));
+    tstData.insert( "key2", QVariant("secondInsert"));
+
+    insert(0, tstData);
+
 }
