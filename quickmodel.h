@@ -16,7 +16,7 @@ public:
 
     const QList<QVariantList>& items() const;
     void setItemList(const QList<QVariantList> &items);
-    void setFields(const QStringList &keys);
+    Q_INVOKABLE void setFields(const QStringList &keys);
 
 
     // useful with QVariantList
