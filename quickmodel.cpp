@@ -115,7 +115,7 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
         QVariant v = i.value();
         int ndx = m_rolesForKeys[r];
         res[ndx] = v;
-        qDebug() << i.key() << ": " << i.value() << endl;
+        //qDebug() << i.key() << ": " << i.value() << endl;
     }
     return res;
 }
@@ -126,13 +126,12 @@ QVariantMap QuickModel::get(int pos)
 
     QVariantMap res;
 
-    int ndx = 0;
     QHashIterator<QString, int> i(m_rolesForKeys);
     while(i.hasNext())
     {
         i.next();
-        res[i.key()] = resLst.at(ndx);
-        ndx ++;
+        //QDebug() << "key: " << i.key() << " val"
+        res[i.key()] = resLst.at(i.value());        
     }
     return res;
 }
