@@ -8,6 +8,9 @@ QuickModel::QuickModel(QObject *parent)
 }
 
 
+/*!
+internal
+*/
 int QuickModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -18,6 +21,10 @@ int QuickModel::rowCount(const QModelIndex &parent) const
 }
 
 
+/*!
+    Returns the item's data for the given \a role, or an invalid
+    QVariant if there is no data for the role.
+*/
 QVariant QuickModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_lst.size())
@@ -29,6 +36,9 @@ QVariant QuickModel::data(const QModelIndex &index, int role) const
     return va;
 }
 
+/*!
+internal
+*/
 void QuickModel::setItemList(const QList<QVariantList> &items)
 {
     emit beginResetModel();
@@ -36,11 +46,17 @@ void QuickModel::setItemList(const QList<QVariantList> &items)
     emit endResetModel();
 }
 
+/*!
+internal
+*/
 const QList<QVariantList>& QuickModel::items() const
 {
     return m_lst;
 }
 
+/*!
+  Set \a fields aka rolenames for items
+*/
 void QuickModel::setFields(const QStringList &keys)
 {
     m_roleNames.clear();
@@ -57,6 +73,9 @@ void QuickModel::setFields(const QStringList &keys)
     setRoleNames(m_roleNames);
 }
 
+/*!
+internal
+*/
 int QuickModel::fieldIndex(const QString &fieldname)
 {
     int ndx = -1;
@@ -69,8 +88,19 @@ int QuickModel::fieldIndex(const QString &fieldname)
     return ndx;
 }
 
+/*!
+tbd
+*/
+void QuickModel::sort(const QString &field, Qt::SortOrder order)
+{
+
+}
 
 
+
+/*!
+  Insert \a an item at \a position.
+*/
 void QuickModel::insert(int pos, const QVariantMap& item)
 {
     QVariantList variantList;
@@ -82,6 +112,9 @@ void QuickModel::insert(int pos, const QVariantMap& item)
 
 }
 
+/*!
+  Set \a item at \a position.
+*/
 void QuickModel::set(int pos, const QVariantMap &item)
 {
     QVariantList variantList;
@@ -91,6 +124,9 @@ void QuickModel::set(int pos, const QVariantMap &item)
     emit dataChanged(idx, idx);
 }
 
+/*!
+  Append \a an item.
+*/
 void QuickModel::append(const QVariantMap& item)
 {
     insert(m_lst.size(), item);
@@ -98,7 +134,9 @@ void QuickModel::append(const QVariantMap& item)
 
 
 
-
+/*!
+internal
+*/
 QVariantList QuickModel::flatten(const QVariantMap &map)
 {
     QVariantList res;
@@ -120,11 +158,14 @@ QVariantList QuickModel::flatten(const QVariantMap &map)
     return res;
 }
 
+/*!
+Returns the item for the given \a position if one has been set; otherwise returns an invalid QVariantMap
+*/
 QVariantMap QuickModel::get(int pos)
 {
     QVariantList resLst = m_lst.at(pos);
 
-    QVariantMap res;
+    QVariantMap res = QVariantMap();
 
     QHashIterator<QString, int> i(m_rolesForKeys);
     while(i.hasNext())
@@ -136,11 +177,17 @@ QVariantMap QuickModel::get(int pos)
     return res;
 }
 
+/*!
+    Return the number of rows.
+*/
 int QuickModel::count()
 {
     return rowCount();
 }
 
+/*!
+    Clear model.
+*/
 void QuickModel::clear()
 {
     emit beginResetModel();
@@ -148,6 +195,9 @@ void QuickModel::clear()
     emit endResetModel();
 }
 
+/*!
+    Remove item at \a position.
+*/
 void QuickModel::remove(int pos)
 {
     beginRemoveRows(QModelIndex(), pos, pos);
@@ -155,6 +205,10 @@ void QuickModel::remove(int pos)
     endRemoveRows();
 }
 
+
+/*!
+    Sets the item data at given \a position for the given \a field to the specified \a value.
+*/
 void QuickModel::setProperty(int pos, QString& property, QVariant value)
 {
     QVariantList resLst = m_lst.at(pos);

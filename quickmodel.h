@@ -32,6 +32,8 @@ public:
     Q_INVOKABLE int count();
     Q_INVOKABLE void clear();
     Q_INVOKABLE void remove(int pos);
+
+
     Q_INVOKABLE void setProperty(int pos, QString& property, QVariant value);
 
 
