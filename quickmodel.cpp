@@ -1,6 +1,6 @@
-
 #include "quickmodel.h"
 #include <QDebug>
+#include <QFile>
 
 QuickModel::QuickModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -32,7 +32,6 @@ QVariant QuickModel::data(const QModelIndex &index, int role) const
 
     const QVariantList& v = m_lst.at(index.row());
     QVariant va = v[role];
-    qDebug() << va;
     return va;
 }
 
@@ -93,7 +92,8 @@ tbd
 */
 void QuickModel::sort(const QString &field, Qt::SortOrder order)
 {
-
+    Q_UNUSED(field);
+    Q_UNUSED(order);
 }
 
 
@@ -171,8 +171,7 @@ QVariantMap QuickModel::get(int pos)
     while(i.hasNext())
     {
         i.next();
-        //QDebug() << "key: " << i.key() << " val"
-        res[i.key()] = resLst.at(i.value());        
+        res[i.key()] = resLst.at(i.value());
     }
     return res;
 }
@@ -209,7 +208,7 @@ void QuickModel::remove(int pos)
 /*!
     Sets the item data at given \a position for the given \a field to the specified \a value.
 */
-void QuickModel::setProperty(int pos, QString& property, QVariant value)
+void QuickModel::setProperty(int pos, QString property, QVariant value)
 {
     QVariantList resLst = m_lst.at(pos);
 
@@ -220,6 +219,52 @@ void QuickModel::setProperty(int pos, QString& property, QVariant value)
     m_lst.replace(pos, resLst);
     QModelIndex idx = createIndex(pos,0);
     emit dataChanged(idx, idx);
+}
+
+/*!
+internal
+*/
+void QuickModel::save(QIODevice *device)
+{
+    QDataStream out(device);
+    out << m_lst;
+}
+
+/*!
+internal
+*/
+void QuickModel::restore(QIODevice *device)
+{
+    QDataStream in(device);
+    QList<QVariantList> tmp;
+    in >> tmp;
+    setItemList(tmp);
+}
+
+/*!
+    serialize the model data to file. \a File name
+*/
+void QuickModel::saveToFile(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadWrite))
+    {
+        return;
+    }
+    save(&file);
+}
+
+/*!
+    read serialized model data from file. \a File name
+*/
+void QuickModel::restoreFromFile(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+    restore(&file);
 }
 
 

@@ -120,6 +120,42 @@ Rectangle {
             onClicked: buildModel()
         }
     }
+    Rectangle {
+        id: button5
+        color: "cyan"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button4.bottom;
+        Text { text: "save" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: quickmdl.saveToFile("file.tst");
+        }
+    }
+    Rectangle {
+        id: button6
+        color: "purple"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button5.bottom;
+        Text { text: "restore" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: quickmdl.restoreFromFile("file.tst");
+        }
+
+    }
+
+    Rectangle {
+        id: button7
+        color: "steelblue"
+        width: 50; height: 24; anchors.right: parent.right; anchors.top: button6.bottom;
+        Text { text: "setProperty" }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                quickmdl.setProperty(0, "name", "naami");
+                quickmdl.setProperty(0, "salary", "555");
+            }
+        }
+    }
+
 
     Component.onCompleted: buildModel();
 
